@@ -20,8 +20,18 @@ A localStorage and sessionStorage wrapper, lightweight, fast, simple to use.
 ## 基本使用
 
 ### 获取值
+``` javascript
+import { store } from 'fastore'
+
+let user = store('user')
+```
 
 ### 设置值
+``` javascript
+import { store } from 'fastore'
+
+let user = store('user', {id: '1', key: ''})
+```
 
 ## 命名空间
 
