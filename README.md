@@ -1,7 +1,7 @@
-# fastore - v1.0.2 (under MIT)
+# fastore - v1.0.3 (under MIT)
 一个封装 localStorage 及 sessionStorage 的轻量级、快速易用的库。
 
-[English](./readme.md) | [简体中文](./zh-CN.md)
+[English](./README.md) | [简体中文](./zh-CN.md)
 
 ## Install
 ### npm
@@ -15,7 +15,7 @@ $ npm install --save-dev fastore
 ```
 
 ## Quick Start
-fastore 即 fast store 之意，顾名思义，目的是提供一个快速应用的本地存储方式。
+fastore 即 fast store 之意，顾名思义，目的是提供一个快速使用本地存储的方式。
 
 localStorage 与 sessionStorage 两者除了信息保存时间的长短不同之外，其操作无任何区别。下方均使用 localStorage 来举例，session 操作亦然。
 
@@ -33,7 +33,7 @@ localStorage 与 sessionStorage 两者除了信息保存时间的长短不同之
 | works.wen | ["赤壁赋", "策断", "晁错论"] |
 | works.hua | ["潇湘竹石图", "枯木怪石图", "偃松图卷"] |
 
-### 获得所有的 key/value 对
+### 1.获得所有的 key/value 对
 仅需要不提供任何参数：
 ``` javascript
 import { store } from 'fastore'
@@ -41,7 +41,16 @@ import { store } from 'fastore'
 let all = store()     // 获得全部键值对
 ```
 
-### 1. 获取一个值
+对于 sessionStorage 而言，唯一不同仅仅是导出的名称：
+``` javascript
+import { session } from 'fastore'
+
+let all = session()     // 获得全部键值对
+```
+
+> store 及 session 两者拥有相同的方法，后续示例中，将 store 改成 session 即代表使用的是 sessionStorage。
+
+### 2. 获取一个值
 ``` javascript
 import { store } from 'fastore'
 
@@ -58,7 +67,7 @@ store(['firstname', 'nick'])  // ['苏', '东坡']
 
 > 存于 localStorage 的值均为字符串，fastore 会自动将其值转为对象（使用 JSON.parse()）。
 
-### 2.设置一个值
+### 3.设置一个值
 ``` javascript
 store('nick', '东坡居士')
 ```
@@ -85,7 +94,7 @@ store('isMan, isLoveEat, isLoveTravel', true)
 store(['isMan', 'isLoveEat', 'isLoveTravel'], true)
 ```
 
-### 3.遍历 localStorage
+### 4.遍历 localStorage
 
 若仅传递一个 callback 函数给 store，fastore 将遍历整个 localStorage 并传递每一个 key 及其对应的值给该 callback。
 
@@ -95,32 +104,32 @@ store((key, value, index) => {
 })
 ```
 
-### 4.清空 localStorage
+### 5.清空 localStorage
 ``` javascript
 store.clear()
 ```
 
-### 5.获取现存有多少个数据
+### 6.获取现存有多少个数据
 ``` javascript
 store.size()
 ```
 
-### 6.获取全部 key
+### 7.获取全部 key
 ``` javascript
 store.keys()
 ```
 
-### 7.判断 key 是否存在
+### 8.判断 key 是否存在
 ``` javascript
 store.has('address')    // 返回 true/fasle
 ```
 
-### 8.移除指定 key-value
+### 9.移除指定 key-value
 ``` javascript
 store.remove('address')
 ```
 
-### 9.命名空间
+### 10.命名空间
 ``` javascript
 let works = store.namespace('works')
 
@@ -132,7 +141,7 @@ works('wen') // 获取 'works.wen' 的值
 
 命名空间一般用于项目间或团队间隔离之用，目的是避免命名冲突。
 
-一般命名空间使用点号 `.` 作为分隔，利如： `com.oa.workflow`。
+一般命名空间使用点号 `.` 作为分隔，例如： `com.oa.workflow`。
 
 如果使用了命名空间，所有操作将受限在命名空间下。
 譬如添加一个新的项：
