@@ -32,11 +32,7 @@ task("test-watch", function () {
 
 task("build", function () {
     return src("./build/fastore.js")
-        .pipe(
-            babel({
-                presets: ["env"]
-            })
-        )
+        .pipe(babel())
         .pipe(uglify())
         .pipe(dest("./dist"))
 })
