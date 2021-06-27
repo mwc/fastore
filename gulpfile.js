@@ -23,7 +23,9 @@ task("rollup", function () {
 })
 
 task("test", function () {
-    return src(["./tests/**/*.js", "!./tests/**/*.spec.js"]).pipe(mocha())
+    return src(["./tests/**/*.js", "!./tests/**/*.spec.js"]).pipe(mocha({
+        timeout: 10000,
+    }))
 })
 
 task("test-watch", function () {

@@ -1,6 +1,26 @@
 import { wrapper } from '../src/storage.js'
 import { assert } from 'chai'
 
+let storageListeners = { 'storage': [] }
+
+global.addEventListener = function (type, listener) {
+    storageListeners[type].push(listener)
+}
+
+global.removeEventListener = function (type, listener) {
+    let index = storageListeners[type].findIndex(handler => handler == listener)
+
+    if (index != -1) {
+        storageListeners[type] = [...storageListeners[type].slice(0, index), ...storageListeners[type].slice(index + 1)]
+    }
+}
+
+function dispatchEvent(type, event) {
+    storageListeners[type].forEach(listener => {
+        listener(event)
+    })
+}
+
 function mock() {
     let data = {
         google_experiment_mod36: '409',
@@ -22,7 +42,19 @@ function mock() {
         getItem(key) { return this[key] },
         setItem(key, value) {
             if (!(key in this)) this.length += 1
-            this[key] = String(value)
+            let oldValue = this[key]
+            let newValue = this[key] = String(value)
+            let storageArea = this
+
+            if (storageListeners.storage.length) {
+                dispatchEvent('storage', {
+                    key,
+                    newValue,
+                    oldValue,
+                    storageArea,
+                    url: ''
+                })
+            }
         },
         removeItem(key) {
             if (key in this) {
@@ -51,6 +83,7 @@ describe('storage', function () {
 
     beforeEach(function () {
         store = mock()
+        storageListeners = { 'storage': [] }
     })
 
     describe('constructor', function () {
@@ -445,6 +478,100 @@ describe('storage', function () {
 
             assert.equal(google_experiment.size(), 3)
             assert.equal(google_experiment.has('mod36, mod53, mod44'), true)
+        })
+    })
+
+    describe('StorageEvent', function () {
+        it('#on', function () {
+            let off = store.on(e => {
+                assert.equal(e.key, 'taskTracker')
+                assert.equal(e.oldValue, 1606631394371)
+                assert.equal(e.newValue, 1912)
+
+                off()
+            })
+
+            store('taskTracker', '1912')
+        })
+
+        it('filter keys', function () {
+            // A: 监听 taskTracker, menus 两个 key
+            store.on('taskTracker, menus', e => {
+                assert.equal(e.key, "menus")
+                assert.notEqual(e.key, 'userid')
+            })
+
+            // B: 只监听 userid
+            store.on('userid', e => {
+                assert.notEqual(e.key, "menus")
+                assert.equal(e.key, 'userid')
+            })
+
+            // 修改 menus 时，触发 A 的 handler，但不会触发 B
+            store('menus', ['news'])
+
+            // 修改 userid 时，只触发 B 的 handler，但不会触发 A
+            store('userid', 'abc')
+        })
+
+        it('event off', function () {
+            // 通过记录修改的 key 的名称来判断事件是否被移除了
+            let changeKey = ''
+
+            let off = store.on(e => {
+                changeKey = e.key
+            })
+
+            // 先修改 userid 的值，触发事件从而将 key 赋值 changeKey
+            store('userid', 'abc')
+            // 因此 changeKey 应该是 userid
+            assert.equal(changeKey, 'userid')
+
+            // 至此移除掉该处理程序
+            off()
+
+            // 接着修改 taskTracker
+            store('taskTracker', 'www')
+            // 因为事件已经移除，因此 changeKey 不会被重新赋值，所以保持为 userid
+            assert.equal(changeKey, 'userid')
+        })
+
+        it('#once', function () {
+            // 通过记录修改的 key 的名称来判断事件是否被移除了
+            let changeKey = ''
+
+            store.once(e => {
+                changeKey = e.key
+            })
+
+            // 先修改 userid 的值，触发事件从而将 key 赋值 changeKey
+            store('userid', 'abc')
+            // 因此 changeKey 应该是 userid
+            assert.equal(changeKey, 'userid')
+
+            // 接着修改 taskTracker
+            store('taskTracker', 'www')
+            // 因为仅执行一次，事件已被移除，因此 changeKey 不会被重新赋值，所以保持为 userid
+            assert.equal(changeKey, 'userid')
+        })
+
+        it('under namespace', function () {
+            let exp = store.ns('google_experiment', '_')
+            let changeKey = ''
+
+            // 在 exp 命名空间下监听
+            exp.on(e => {
+                changeKey = e.key
+            })
+
+            // userid 不在命名空间下，不会触发 on 事件从而修改 changeKey
+            store('userid', 'abc')
+            assert.equal(changeKey, '')
+
+            // 修改 exp 命名空间中的 mod36（实际是 google_experiment_mod36）
+            exp('mod36', 224)
+            // 这个可以响应，因为它是命名空间下的 key
+            assert.equal(changeKey, 'mod36')
         })
     })
 })

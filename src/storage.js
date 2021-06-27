@@ -106,21 +106,10 @@ export function wrapper(storage, ns = '', separator) {
     }
 
     function on(ks, handler, once = false) {
-        const off = () => removeEventListener('storage', handler)
+        const innerHandler = event => {
+            let { key, newValue, oldValue, url, storageArea } = event
 
-        if (typeof ks == 'function') {
-            handler = ks
-            ks = ''
-        }
-
-        if (typeof handler != 'function') {
-            throw new TypeError('The storage event handler must be a function.')
-        }
-
-        addEventListener('storage', event => {
-            const { key, newValue, oldValue, url, storageArea } = event
-
-            if (key.startsWith(ns)) {
+            if (storageArea == storage && key.startsWith(ns)) {
                 ks = parseKeys(ks)
                 key = key.replace(ns, '')
 
@@ -140,7 +129,20 @@ export function wrapper(storage, ns = '', separator) {
                     }
                 }
             }
-        })
+        }
+
+        const off = () => removeEventListener('storage', innerHandler)
+
+        if (typeof ks == 'function') {
+            handler = ks
+            ks = ''
+        }
+
+        if (typeof handler != 'function') {
+            throw new TypeError('The storage event handler must be a function.')
+        }
+
+        addEventListener('storage', innerHandler)
 
         return off
     }
@@ -181,5 +183,7 @@ export function wrapper(storage, ns = '', separator) {
     return Object.assign(accessor, APIs)
 }
 
-export const session = wrapper(global['sessionStorage'])
-export const store = wrapper(global['localStorage'])
+let g = typeof window == 'undefined' ? global : window
+
+export const session = wrapper(g['sessionStorage'])
+export const store = wrapper(g['localStorage'])
