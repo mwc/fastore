@@ -1,8 +1,10 @@
 {
   "name": "fastore",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A localStorage wrapper, lightweight, fast, simple to use.",
   "main": "src/storage.js",
+  "module": "src/storage.js",
+  "unpkg": "dist/fastore.js",
   "type": "module",
   "scripts": {
     "test": "gulp test",

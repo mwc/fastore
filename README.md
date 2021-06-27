@@ -1,4 +1,4 @@
-# fastore - v1.0.4 (under MIT)
+# fastore - v1.0.5 (under MIT)
 一个封装 localStorage 及 sessionStorage 的轻量级、快速易用的库。
 
 ![Build](https://img.shields.io/badge/build-passing-green.svg)
@@ -67,13 +67,16 @@ import { store } from 'fastore'
 store('userid')     // meishan001
 ```
 
-获取多个值
+获取多个值：
+
 ``` javascript
 import { store } from 'fastore'
 
 store('firstname, nick')  // { firstname: '苏', nick: '东坡' }
 store(['firstname', 'nick'])  // ['苏', '东坡']
 ```
+
+传递 key 数组，返回的类型也将是值数组。
 
 > 存于 `localStorage` 或 `sessionStorage` 的值均为字符串，fastore 会自动将其值转为对象（使用 `JSON.parse()`）。
 
@@ -82,7 +85,8 @@ store(['firstname', 'nick'])  // ['苏', '东坡']
 store('nick', '东坡居士')
 ```
 
-值也可以是一个函数，它将被执行后，将返回值设置为 `key` 的值：
+`store` 的第一个参数是 key，通过第二个参数为其赋值，值也可以是一个函数，它被执行后，将返回值设置为 key 的值：
+
 ``` javascript
 store('nick', (oldValue, index) => {
     return '东坡胖子'
@@ -160,13 +164,15 @@ works('wen') // 获取 'works.wen' 的值
 
 一般命名空间使用点号 `.` 作为分隔，例如： `com.oa.workflow`。
 
+> 命名空间并无特别之处，它依然只不过是一个普通的键名。
+
 如果使用了命名空间，所有操作将受限在命名空间下。
 譬如添加一个新的项：
 
 ``` javascript
 let works = store.namespace('works')
 
-works('weiqi', '9段')
+works('weiqi', '9段')   // works.weiqi = '9段'
 ```
 
 works 的用法与 `store` 一致，它有 `store` 全部相同的方法。
@@ -286,7 +292,7 @@ works.on('shi, ci', event => { ... })
 | 名称 | 类型 | 说明 |
 | - | - | - |
 | key | string | 该属性代表被修改的键值。当被clear()方法清除之后该属性值为null。（只读），如受限在命名空间下，它不会展示命名空间前缀 |
-| namespace | string | key 所在的命名空间 |
+| namespace | string | key 所在的命名空间（只读） |
 | oldValue | string | 该属性代表修改前的原值。在设置新键值对时由于没有原始值，该属性值为 null。（只读） |
 | newValue | string | 该属性代表修改后的新值。当被clear()方法清理后或者该键值对被移除，newValue 的值为 null 。（只读） |
 | url | string | key 发生改变的对象所在文档的URL地址。（只读）|
