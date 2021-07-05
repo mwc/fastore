@@ -1,8 +1,6 @@
 # fastore - v1.0.5 (under MIT)
 A light-weight package of `localStorage` and `sessionStorage` 
 
-一个封装 localStorage 及 sessionStorage 的轻量级、快速易用的库。
-
 ![Build](https://img.shields.io/badge/build-passing-green.svg)
 ![Unit Tests](https://img.shields.io/badge/tests-51%20passed-green)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/fastore)
@@ -15,7 +13,7 @@ A light-weight package of `localStorage` and `sessionStorage`
 
 ## Install
 
-#### npm
+#### NPM
 
 ```javascript
 $ npm install --save-dev fastore
@@ -58,6 +56,13 @@ No arguments provided.
 import { store } from 'fastore'
 
 let all = store()     // return all key-value pairs using store()
+
+// {
+//   userid: 'meishan001',
+//   firstname: '苏',
+//   ...
+//   "works.hua": '["潇湘竹石图", "枯木怪石图", "偃松图卷"]'
+// }
 ```
 
 In the case of `sessionStorage`, just use `session()` function：
