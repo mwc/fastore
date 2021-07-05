@@ -1,4 +1,4 @@
-# fastore - v1.0.5 (under MIT)
+# fastore - v1.0.6 (under MIT)
 一个封装 localStorage 及 sessionStorage 的轻量级、快速易用的库。
 
 ![Build](https://img.shields.io/badge/build-passing-green.svg)

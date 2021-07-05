@@ -1,6 +1,6 @@
 {
   "name": "fastore",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A localStorage wrapper, lightweight, fast, simple to use.",
   "main": "src/storage.js",
   "module": "src/storage.js",
