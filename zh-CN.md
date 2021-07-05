@@ -12,12 +12,15 @@
 [English](./README.md) | [简体中文](./zh-CN.md)
 
 ## 安装
-### npm
+
+### NPM
+
 ```cmd
 $ npm install --save-dev fastore
 ```
 
 ### CDN
+
 ```cmd
 [unpkg]  https://unpkg.com/fastore
 ```
@@ -49,13 +52,6 @@ fastore 即 fast store 之意，顾名思义，目的是提供一个快速使用
 import { store } from 'fastore'
 
 let all = store()     // 获得全部键值对
-```
-
-对于 `sessionStorage` 而言，唯一不同仅仅是使用时的名称：
-``` javascript
-import { store } from 'fastore'
-
-let all = store()     // 获得全部键值对，以对象形式返回
 
 // {
 //   userid: 'meishan001',
@@ -63,6 +59,13 @@ let all = store()     // 获得全部键值对，以对象形式返回
 //   ...
 //   "works.hua": '["潇湘竹石图", "枯木怪石图", "偃松图卷"]'
 // }
+```
+
+对于 `sessionStorage` 而言，唯一不同仅仅是使用时的名称：
+``` javascript
+import { session } from 'fastore'
+
+let all = session()     // 获得全部键值对，以对象形式返回
 ```
 
 > `store` 及 `session` 两者拥有相同的 API 方法，后续示例中，将 `store` 替换为 `session` 即代表使用的是 `sessionStorage`。
@@ -244,7 +247,7 @@ let others = store.ns('works.others')
 others('kongfu')
 ```
 
-### Storage 事件
+### 11.Storage 事件
 
 你可以通过监听 `Storage` 事件，以知悉 `store` 中数据项已发生变化。创建、更新或删除数据项时，均能收到通知（但对已存在的键进行赋值则不会触发此事件）。
 
