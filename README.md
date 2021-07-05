@@ -1,4 +1,4 @@
-# fastore - v1.0.5 (under MIT)
+# fastore - v1.0.6 (under MIT)
 A light-weight package of `localStorage` and `sessionStorage` 
 
 ![Build](https://img.shields.io/badge/build-passing-green.svg)
