@@ -318,7 +318,7 @@ works.on('shi, ci', event => { ... })
 
 ### Storage Event Parameters
 
-| 名称      | 类型   | 说明                                                         |
+| Name      | Type   | Description                                               |
 | --------- | ------ | ------------------------------------------------------------ |
 | key       | string | Modified key. If the value is cleared using `clear()`, key is value. If scoped to namespace, it will not show namespace as prefix. (read only) |
 | namespace | string | namespace where key locates. (read only)                     |
