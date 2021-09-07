@@ -1,9 +1,9 @@
-import gulp from "gulp"
-import babel from "gulp-babel"
-import rollup from "gulp-rollup"
-import rename from "gulp-rename"
-import mocha from "gulp-mocha"
-import uglify from "gulp-uglify"
+const gulp = require("gulp")
+const babel = require("gulp-babel")
+const rollup = require("gulp-rollup")
+const rename = require("gulp-rename")
+const mocha = require("gulp-mocha")
+const uglify = require("gulp-uglify")
 
 const { task, src, dest, series, watch } = gulp
 
@@ -25,6 +25,7 @@ task("rollup", function () {
 task("test", function () {
     return src(["./tests/**/*.js", "!./tests/**/*.spec.js"]).pipe(mocha({
         timeout: 10000,
+        require: "@babel/register",
     }))
 })
 
